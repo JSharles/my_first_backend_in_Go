@@ -88,7 +88,7 @@ func GetUser(id int) {
 
 // Delete user
 
-func DeleteUser(id int) {
+func Delete(id int) {
 	db := ConnectDb()
 	defer db.Close()
 	delUser, err := db.Prepare("DELETE FROM users WHERE ID=?")
@@ -97,6 +97,7 @@ func DeleteUser(id int) {
 	}
 	delUser.Exec(id)
 	fmt.Printf("User with id %v was deleted successlfully.", id)
+
 }
 
 // Modify password

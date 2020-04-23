@@ -17,7 +17,8 @@ func handleRequests() {
 	/////////// USER ///////////
 	///////////////////////////
 	//Create an Account
-	myRouter.HandleFunc("/user", s.CreateUsers)
+	myRouter.HandleFunc("/register", s.CreateUser)
+	myRouter.HandleFunc("/deleteuser/{id}", s.DeleteUser)
 
 	/////////////////////////////
 	////////// EVENT ///////////
@@ -30,6 +31,8 @@ func main() {
 	//routes.CreateUsers("Pau", "Rey", "Paul", "Homme", "pau@paul.com", "1996-12-10", "france", "toulouse", "francaise", "paul")
 	//routes.GetAllUsers()
 	//routes.GetUser(2)
+
 	fmt.Println("Starting Moodoow Backend on port 5000")
 	handleRequests()
+
 }
