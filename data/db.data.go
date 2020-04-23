@@ -17,7 +17,7 @@ func ConnectDb() (db *sql.DB) {
 	if err != nil {
 		panic(err.Error())
 	} else {
-		fmt.Println("Connected...")
+		fmt.Println("Connected to port 3306")
 	}
 	return db
 

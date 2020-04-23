@@ -1,21 +1,35 @@
 package main
 
 import (
-	"MOODOOW/BACK-END-GOLANG/routes"
+	"fmt"
+	"log"
+	"net/http"
+
+	s "MOODOOW/BACK-END-GOLANG/services"
+
+	"github.com/gorilla/mux"
 )
 
+func handleRequests() {
+	myRouter := mux.NewRouter()
+
+	/////////////////////////////
+	/////////// USER ///////////
+	///////////////////////////
+	//Create an Account
+	myRouter.HandleFunc("/user", s.CreateUsers)
+
+	/////////////////////////////
+	////////// EVENT ///////////
+	///////////////////////////
+	// Listen on port : ...
+	log.Fatal(http.ListenAndServe(":5000", myRouter))
+}
+
 func main() {
-	// dbCon := data.ConnectDb()
-	// defer dbCon.Close()
-
-	// insert, err := dbCon.Query("INSERT INTO users(pseudo, nom, prenom, gender, email, pays, ville, nationalite) VALUES ('pauloo', 'rey', 'paul', 'homme', 'rey.paul31@gmail.com', 'France', 'Gratentour', 'Francais');")
-
-	// if err != nil {
-	// 	panic(err.Error())
-	// }
-
-	// defer insert.Close()
-
-	routes.CreateUsers("Toto", "Toto", "Toto", "Male", "toto42@gmail.com", "1942-01-01", "toto land", "toto city", "unknown", "toto42")
-
+	//routes.CreateUsers("Pau", "Rey", "Paul", "Homme", "pau@paul.com", "1996-12-10", "france", "toulouse", "francaise", "paul")
+	//routes.GetAllUsers()
+	//routes.GetUser(2)
+	fmt.Println("Starting Moodoow Backend on port 5000")
+	handleRequests()
 }
