@@ -7,6 +7,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
+// ConnectDb provides connexion infos to the DB
 func ConnectDb() (db *sql.DB) {
 	dbDriver := "mysql"
 	dbUser := "root"

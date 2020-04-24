@@ -3,6 +3,7 @@ package data
 import (
 	"fmt"
 
+	e "MOODOOW/BACK-END-GOLANG/error"
 	t "MOODOOW/BACK-END-GOLANG/types"
 
 	"golang.org/x/crypto/bcrypt"
@@ -14,16 +15,11 @@ func SetNewUser(user t.Users) {
 	defer db.Close()
 
 	cryptPwd, err := HashPassword(user.Password)
-	if err != nil {
-		panic(err.Error())
-	}
+	e.HandleError(err)
 
 	insert, err := db.Prepare("INSERT INTO users(pseudo, nom, prenom, gender, email, date_naissance, pays, ville, nationalite, password) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?);")
 	defer insert.Close()
-	if err != nil {
-		panic(err.Error())
-	}
-
+	e.HandleError(err)
 	_, err = insert.Exec(user.Pseudo, user.Nom, user.Prenom, user.Gender, user.Email, user.DateNaissance, user.Pays, user.Ville, user.Nationalite, cryptPwd)
 	if err != nil {
 		panic(err.Error())
@@ -32,8 +28,8 @@ func SetNewUser(user t.Users) {
 	}
 }
 
-// GetAllUsers :  recover all users in database
-func GetAllUsers() {
+// GetUsers :  recover all users in database
+func GetUsers() {
 	db := ConnectDb()
 	defer db.Close()
 
@@ -41,9 +37,7 @@ func GetAllUsers() {
 	var users t.Users
 
 	rows, err := db.Query("Select ID, pseudo, nom, prenom, gender, email, date_naissance, pays, ville, nationalite, password from users")
-	if err != nil {
-		panic(err.Error())
-	}
+	e.HandleError(err)
 
 	for rows.Next() {
 		err := rows.Scan(&users.ID, &users.Pseudo, &users.Nom, &users.Prenom, &users.Gender, &users.Email, &users.DateNaissance, &users.Pays, &users.Ville, &users.Nationalite, &users.Password)
@@ -58,8 +52,8 @@ func GetAllUsers() {
 	}
 }
 
-// GetUser :  recover one user where ID
-func GetUser(id int) {
+// GetUserInfo :  recover one user where ID
+func GetUserInfo(id int) {
 	db := ConnectDb()
 	defer db.Close()
 
@@ -67,9 +61,7 @@ func GetUser(id int) {
 	var user t.Users
 
 	row, err := db.Query("Select ID, pseudo, nom, prenom, gender, email, pays, ville, nationalite, password from users WHERE ID=?", id)
-	if err != nil {
-		panic(err.Error())
-	}
+	e.HandleError(err)
 
 	for row.Next() {
 		err := row.Scan(&user.ID, &user.Pseudo, &user.Nom, &user.Prenom, &user.Gender, &user.Email, &user.Pays, &user.Ville, &user.Nationalite, &user.Password)
@@ -84,17 +76,40 @@ func GetUser(id int) {
 	}
 }
 
+// GetUserInfoByPseudo : get user info using the pseudo
+func GetUserInfoByPseudo(pseudo string) []t.Users {
+	db := ConnectDb()
+	defer db.Close()
+
+	var arrUser []t.Users
+	var user t.Users
+
+	row, err := db.Query("Select ID, pseudo, nom, prenom, gender, email, pays, ville, nationalite, password from users WHERE pseudo=?", pseudo)
+	e.HandleError(err)
+
+	for row.Next() {
+		err := row.Scan(&user.ID, &user.Pseudo, &user.Nom, &user.Prenom, &user.Gender, &user.Email, &user.Pays, &user.Ville, &user.Nationalite, &user.Password)
+		if err != nil {
+			panic(err.Error())
+		} else {
+			arrUser = append(arrUser, user)
+		}
+	}
+	for _, v := range arrUser {
+		fmt.Println(v)
+	}
+
+	return arrUser
+}
+
 // Update user
 
 // Delete user
-
 func Delete(id int) {
 	db := ConnectDb()
 	defer db.Close()
 	delUser, err := db.Prepare("DELETE FROM users WHERE ID=?")
-	if err != nil {
-		panic(err)
-	}
+	e.HandleError(err)
 	delUser.Exec(id)
 	fmt.Printf("User with id %v was deleted successlfully.", id)
 
@@ -102,15 +117,14 @@ func Delete(id int) {
 
 // Modify password
 
-// Function to encrypt password
+// HashPassword : Function to encrypt password
 func HashPassword(password string) (string, error) {
 	bytes, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	return string(bytes), err
 }
 
-// Function to compare password to saved hash
-
-// func CheckPasswordHash(password, hash string) bool {
-// 	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
-// 	return err == nil
-// }
+// CheckPwd : Function to compare password to saved hash
+func CheckPwd(password, hash string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+	return err == nil
+}

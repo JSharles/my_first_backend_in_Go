@@ -1,5 +1,6 @@
 package users
 
+// Users : Model to store users in Db
 type Users struct {
 	ID            int    `json:"id"`
 	Pseudo        string `json:"pseudo"`
@@ -12,4 +13,10 @@ type Users struct {
 	Ville         string `json:"ville"`
 	Nationalite   string `json:"nationalite"`
 	Password      string `json:"password"`
+}
+
+// UserConnectRequest : Model to make verification in the DB
+type UserConnectRequest struct {
+	Pseudo   string `json:"pseudo"`
+	Password string `json:"password"`
 }
