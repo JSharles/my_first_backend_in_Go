@@ -28,30 +28,6 @@ func SetNewUser(user t.Users) {
 	}
 }
 
-// GetUsers :  recover all users in database
-func GetUsers() {
-	db := ConnectDb()
-	defer db.Close()
-
-	var arrUsers []t.Users
-	var users t.Users
-
-	rows, err := db.Query("Select ID, pseudo, nom, prenom, gender, email, date_naissance, pays, ville, nationalite, password from users")
-	e.HandleError(err)
-
-	for rows.Next() {
-		err := rows.Scan(&users.ID, &users.Pseudo, &users.Nom, &users.Prenom, &users.Gender, &users.Email, &users.DateNaissance, &users.Pays, &users.Ville, &users.Nationalite, &users.Password)
-		if err != nil {
-			panic(err.Error())
-		} else {
-			arrUsers = append(arrUsers, users)
-		}
-	}
-	for _, v := range arrUsers {
-		fmt.Println(v)
-	}
-}
-
 // GetUserInfo :  recover one user where ID
 func GetUserInfo(id int) {
 	db := ConnectDb()
