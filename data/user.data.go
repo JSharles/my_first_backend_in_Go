@@ -28,6 +28,26 @@ func SetNewUser(user t.Users) {
 	}
 }
 
+// ConnectUser : Function to connect a user
+func ConnectUser(pseudo string) t.UserConnectAnswer {
+	var userConnect t.UserConnectAnswer
+
+	db := ConnectDb()
+	defer db.Close()
+
+	err := db.QueryRow("SELECT id, pseudo, pays, ville FROM users WHERE pseudo = ?", pseudo).Scan(&userConnect.ID, &userConnect.Pseudo, &userConnect.Pays, &userConnect.Ville)
+
+	if err != nil {
+		fmt.Println("Login fail for ", pseudo)
+		userConnect.Ok = false
+	} else {
+		userConnect.Ok = true
+	}
+
+	return userConnect
+
+}
+
 // GetUserInfo :  recover one user where ID
 func GetUserInfo(id int) {
 	db := ConnectDb()
@@ -91,7 +111,20 @@ func Delete(id int) {
 
 }
 
-// Modify password
+// ProfilOk : function to check if profile exists
+func ProfilOk(ID int) bool {
+
+	db := ConnectDb()
+	defer db.Close()
+	var answer bool
+
+	err := db.QueryRow("SELECT TRUE FROM users WHERE id = ? LIMIT 1", ID).Scan(&answer)
+
+	if err != nil {
+		answer = false
+	}
+	return answer
+}
 
 // HashPassword : Function to encrypt password
 func HashPassword(password string) (string, error) {

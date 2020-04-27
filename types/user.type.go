@@ -1,4 +1,4 @@
-package users
+package types
 
 // Users : Model to store users in Db
 type Users struct {
@@ -19,4 +19,18 @@ type Users struct {
 type UserConnectRequest struct {
 	Pseudo   string `json:"pseudo"`
 	Password string `json:"password"`
+}
+
+// UserConnectAnswer : Model to answer the API connexion
+type UserConnectAnswer struct {
+	Ok     bool   `json:"ok"`
+	ID     int    `json:"id"`
+	Pseudo string `json:"pseudo"`
+	Pays   string `json:"pays"`
+	Ville  string `json:"ville"`
+}
+
+type SigninAnswer struct {
+	Token     string `json:"token"`
+	ProfileOk bool   `json:"profileOk"`
 }
