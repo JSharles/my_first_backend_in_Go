@@ -8,7 +8,7 @@ type Users struct {
 	Prenom        string `json:"prenom"`
 	Gender        string `json:"gender"`
 	Email         string `json:"email"`
-	DateNaissance string `json:"date_naissance"`
+	DateNaissance string `json:"dateNaissance"`
 	Pays          string `json:"pays"`
 	Ville         string `json:"ville"`
 	Nationalite   string `json:"nationalite"`
@@ -30,6 +30,7 @@ type UserConnectAnswer struct {
 	Ville  string `json:"ville"`
 }
 
+// SigninAnswer : Model to check token state
 type SigninAnswer struct {
 	Token     string `json:"token"`
 	ProfileOk bool   `json:"profileOk"`

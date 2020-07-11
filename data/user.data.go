@@ -16,10 +16,11 @@ func SetNewUser(user t.Users) {
 
 	cryptPwd, err := HashPassword(user.Password)
 	e.HandleError(err)
-
-	insert, err := db.Prepare("INSERT INTO users(pseudo, nom, prenom, gender, email, date_naissance, pays, ville, nationalite, password) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?);")
+	// date_naissance
+	insert, err := db.Prepare("INSERT INTO users(pseudo, nom, prenom, gender, email, dateNaissance, pays, ville, nationalite, password) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?);")
 	defer insert.Close()
 	e.HandleError(err)
+	// date_naissance
 	_, err = insert.Exec(user.Pseudo, user.Nom, user.Prenom, user.Gender, user.Email, user.DateNaissance, user.Pays, user.Ville, user.Nationalite, cryptPwd)
 	if err != nil {
 		panic(err.Error())
